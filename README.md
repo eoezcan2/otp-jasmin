@@ -57,10 +57,25 @@ uvicorn otp_service:app --host 0.0.0.0 --port 8000 --reload
 - Swagger UI: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 - ReDoc: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
 
-## Running with Docker (Optional)
-If you prefer using Docker, create a `Dockerfile` and `docker-compose.yml`.
+### Running with Docker (Optional)
+If you prefer using Docker, follow the steps below to run your project in a container.
 
-## License
+#### 1. Build the Docker Image
+```bash
+docker build -t otp-service .
+```
+
+#### 2. Run the Docker Container
+```bash
+docker run -p 8000:8000 otp-service
+```
+
+#### 3. Or Use Docker Compose
+```bash
+docker-compose up -d
+```
+
+### License
 This project is licensed under the MIT License.
 
 ---
