@@ -53,11 +53,12 @@ def send_sms_via_smpp(phone_number: str, otp_code: str):
 
     # Bind as a transmitter to Jasmin using the correct system_id and password
     sys_id = os.getenv('SMPP_USER', 'user')
-    password = os.getenv('SMPP_PASSWORD', 'pass')
-    print(f"Binding as a transmitter with system_id: {sys_id} and password: {password}")
+    pwd = os.getenv('SMPP_PASSWORD', 'pass')
+    print(f"Binding as a transmitter with system_id: {sys_id} and password: {pwd}")
 
-    client.bind_transmitter(system_id=sys_id, password=password)
+    client.bind_transmitter(system_id=sys_id, password=pwd)
     print("Bound as a transmitter")
+
 
     # Create a unique message ID for the OTP request
     message_id = uuid.uuid4().hex

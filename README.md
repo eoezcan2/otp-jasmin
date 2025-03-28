@@ -75,6 +75,15 @@ docker run -p 8000:8000 otp-service
 docker-compose up -d
 ```
 
+### Jasmin CLI (jcli) connection with telnet
+```bash
+telnet 127.0.0.1 8990
+```
+
+username: jcliadmin
+
+password: jclipwd
+
 ### License
 This project is licensed under the MIT License.
 
