@@ -1,8 +1,11 @@
 {
 	"folders": [
-		{
-			"path": "."
-		}
+        {
+            "path": "."
+        },
+        {
+            "path": "../otp-jasmin-frontend"
+        }
     ],
     "settings": {}
 }

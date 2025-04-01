@@ -1,5 +1,3 @@
-version: '3.11'
-
 services:
   otp-service:
     build: .
@@ -11,6 +9,51 @@ services:
     depends_on:
       - db
     restart: always
+  prometheus:
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - monitoring_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    depends_on:
+      - jasmin
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 128M
+    security_opt:
+      - no-new-privileges:true
+  grafana:
+    image: grafana/grafana
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    environment:
+      GF_INSTALL_PLUGINS: "grafana-clock-panel,grafana-simple-json-datasource"
+    volumes:
+      # These mount points should be copied from https://github.com/jookies/jasmin/tree/master/docker/grafana
+      - ./provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./dashboards:/opt/grafana-dashboards:ro
+      - monitoring_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+    security_opt:
+      - no-new-privileges:true
   db:
     image: mysql:latest
     container_name: otp_db
@@ -71,10 +114,10 @@ services:
           memory: 256M
     security_opt:
       - no-new-privileges:true
-
 volumes:
   db_data:
   jasmin_data:
+  monitoring_data: { }
 
 networks:
   smpp-network:
