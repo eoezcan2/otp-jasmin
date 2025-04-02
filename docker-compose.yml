@@ -1,14 +1,24 @@
 services:
+  otp-web:
+    build: frontend/
+    container_name: otp_web
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+    restart: always
+    networks:
+      - smpp-network
   otp-service:
     build: .
     container_name: otp_service
     ports:
       - "8000:8000"
-    environment:
-      - DATABASE_URL=mysql+pymysql://user:password@db/otp_db
     depends_on:
       - db
     restart: always
+    networks:
+      - smpp-network
   prometheus:
     image: prom/prometheus:latest
     restart: unless-stopped
@@ -67,6 +77,8 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
+    networks:
+      - smpp-network
   redis:
     image: redis:alpine
     restart: unless-stopped
